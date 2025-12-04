@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inazuma Dark - Le Football des Ténèbres</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Écran de titre -->
+        <div id="title-screen" class="screen active">
+            <div class="title-content">
+                <h1 class="game-title">INAZUMA DARK</h1>
+                <p class="game-subtitle">Le Football des Ténèbres</p>
+                <div class="menu-options">
+                    <button class="menu-btn" onclick="startNewGame()">Nouvelle Partie</button>
+                    <button class="menu-btn" onclick="continueGame()" id="continue-btn" disabled>Continuer</button>
+                    <button class="menu-btn" onclick="showCredits()">Crédits</button>
+                </div>
+            </div>
+            <div class="atmospheric-text">
+                <p>Inspiré par Fear and Hunger × Inazuma Eleven</p>
+            </div>
+        </div>
+
+        <!-- Sélection de personnage -->
+        <div id="character-select" class="screen">
+            <h2 class="screen-title">CHOISISSEZ VOTRE DESTIN</h2>
+            <div class="character-grid">
+                <!-- Mark -->
+                <div class="character-card" data-character="mark" onclick="selectCharacter('mark')">
+                    <div class="character-portrait mark-portrait">
+                        <div class="element-badge wind">🌪️</div>
+                    </div>
+                    <div class="character-info">
+                        <h3>Mark Evans</h3>
+                        <p class="team">Équipe: Raimon</p>
+                        <p class="type">Type: Gardien</p>
+                        <p class="special">Spécialité: ARRÊTER les buts</p>
+                        <div class="stats-preview">
+                            <span class="stat">ATQ: 40</span>
+                            <span class="stat highlight">DEF: 90</span>
+                            <span class="stat">VIT: 60</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Axel -->
+                <div class="character-card" data-character="axel" onclick="selectCharacter('axel')">
+                    <div class="character-portrait axel-portrait">
+                        <div class="element-badge fire">🔥</div>
+                    </div>
+                    <div class="character-info">
+                        <h3>Axel Blaze</h3>
+                        <p class="team">Équipe: Raimon</p>
+                        <p class="type">Type: Attaquant</p>
+                        <p class="special">Spécialité: MARQUER des buts</p>
+                        <div class="stats-preview">
+                            <span class="stat highlight">ATQ: 95</span>
+                            <span class="stat">DEF: 50</span>
+                            <span class="stat">VIT: 85</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Jude -->
+                <div class="character-card" data-character="jude" onclick="selectCharacter('jude')">
+                    <div class="character-portrait jude-portrait">
+                        <div class="element-badge earth">🌍</div>
+                    </div>
+                    <div class="character-info">
+                        <h3>Jude Sharp</h3>
+                        <p class="team">Équipe: Royal Academy</p>
+                        <p class="type">Type: Stratège</p>
+                        <p class="special">Spécialité: Tactique et analyse</p>
+                        <div class="stats-preview">
+                            <span class="stat">ATQ: 75</span>
+                            <span class="stat">DEF: 70</span>
+                            <span class="stat highlight">TEC: 95</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="character-description" id="char-description">
+                <p>Sélectionnez un personnage pour voir son histoire</p>
+            </div>
+            <button class="back-btn" onclick="backToMenu()">Retour</button>
+        </div>
+
+        <!-- Écran d'histoire -->
+        <div id="story-screen" class="screen">
+            <div class="story-background" id="story-bg"></div>
+            <div class="story-content">
+                <div class="dialogue-box">
+                    <div class="speaker" id="speaker-name"></div>
+                    <div class="dialogue-text" id="dialogue-text"></div>
+                </div>
+                <div class="choices-container" id="choices-container"></div>
+                <button class="continue-btn" id="story-continue" onclick="continueStory()">Continuer ▶</button>
+            </div>
+            <div class="story-hud">
+                <div class="character-status">
+                    <span id="hud-character-name"></span>
+                    <div class="hp-bar">
+                        <div class="hp-fill" id="hud-hp"></div>
+                    </div>
+                    <div class="tp-bar">
+                        <div class="tp-fill" id="hud-tp"></div>
+                    </div>
+                </div>
+                <button class="save-btn" onclick="saveGame()">💾 Sauvegarder</button>
+            </div>
+        </div>
+
+        <!-- Écran de combat -->
+        <div id="battle-screen" class="screen">
+            <div class="battle-arena">
+                <div class="combatant player-side">
+                    <div class="combatant-name" id="player-name"></div>
+                    <div class="health-bar">
+                        <div class="health-fill" id="player-hp"></div>
+                        <span class="health-text" id="player-hp-text"></span>
+                    </div>
+                    <div class="tp-bar">
+                        <div class="tp-fill" id="player-tp"></div>
+                        <span class="tp-text" id="player-tp-text"></span>
+                    </div>
+                </div>
+                
+                <div class="vs-indicator">VS</div>
+                
+                <div class="combatant enemy-side">
+                    <div class="combatant-name" id="enemy-name"></div>
+                    <div class="health-bar">
+                        <div class="health-fill" id="enemy-hp"></div>
+                        <span class="health-text" id="enemy-hp-text"></span>
+                    </div>
+                    <div class="tp-bar">
+                        <div class="tp-fill" id="enemy-tp"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="battle-log" id="battle-log">
+                <p>Le combat commence!</p>
+            </div>
+
+            <div class="battle-actions">
+                <button class="action-btn attack" onclick="battleAction('attack')">⚔️ Attaquer</button>
+                <button class="action-btn technique" onclick="showTechniques()">✨ Techniques</button>
+                <button class="action-btn defend" onclick="battleAction('defend')">🛡️ Défendre</button>
+                <button class="action-btn analyze" onclick="battleAction('analyze')">🔍 Analyser</button>
+            </div>
+
+            <div class="techniques-panel" id="techniques-panel">
+                <h4>Techniques Spéciales</h4>
+                <div class="techniques-list" id="techniques-list"></div>
+                <button class="close-panel" onclick="closeTechniques()">Fermer</button>
+            </div>
+        </div>
+
+        <!-- Écran de fin -->
+        <div id="ending-screen" class="screen">
+            <div class="ending-content">
+                <h2 class="ending-title" id="ending-title"></h2>
+                <p class="ending-text" id="ending-text"></p>
+                <div class="ending-type" id="ending-type"></div>
+                <div class="ending-options">
+                    <button class="menu-btn" onclick="restartWithSameChar()">Rejouer ce personnage</button>
+                    <button class="menu-btn" onclick="backToMenu()">Menu Principal</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Écran des crédits -->
+        <div id="credits-screen" class="screen">
+            <div class="credits-content">
+                <h2>CRÉDITS</h2>
+                <div class="credits-scroll">
+                    <h3>INAZUMA DARK</h3>
+                    <p>Un jeu inspiré de:</p>
+                    <ul>
+                        <li>Inazuma Eleven (Level-5)</li>
+                        <li>Fear and Hunger (Miro Haverinen)</li>
+                    </ul>
+                    
+                    <h3>Personnages Jouables</h3>
+                    <ul>
+                        <li><strong>Mark Evans</strong> - Le gardien passionné</li>
+                        <li><strong>Axel Blaze</strong> - L'attaquant de feu</li>
+                        <li><strong>Jude Sharp</strong> - Le stratège de l'ombre</li>
+                    </ul>
+
+                    <h3>Systèmes de Jeu</h3>
+                    <ul>
+                        <li>Sélection de personnage unique</li>
+                        <li>Histoire ramifiée avec choix multiples</li>
+                        <li>Combats 1vs1 tactiques</li>
+                        <li>Techniques spéciales élémentaires</li>
+                    </ul>
+
+                    <h3>Types Élémentaires</h3>
+                    <ul>
+                        <li>🔥 Feu > 🌳 Bois</li>
+                        <li>🌳 Bois > 🌍 Terre</li>
+                        <li>🌍 Terre > 🌪️ Vent</li>
+                        <li>🌪️ Vent > 🔥 Feu</li>
+                    </ul>
+
+                    <p class="copyright">© 2024 Inazuma Dark Project</p>
+                </div>
+                <button class="back-btn" onclick="backToMenu()">Retour</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/characters/characters.js"></script>
+    <script src="src/story/story.js"></script>
+    <script src="src/battle/battle.js"></script>
+    <script src="src/game.js"></script>
+    <script src="src/ui.js"></script>
+</body>
+</html>
