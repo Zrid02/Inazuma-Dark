@@ -81,7 +81,11 @@ function selectCharacter(characterId) {
         jude: "Jude Sharp est le stratège génial de la Royal Academy. Fils adoptif du directeur Ray Dark, il est tiraillé entre loyauté et justice. Son Pingouin Empereur et ses tactiques font de lui un adversaire redoutable."
     };
     
-    document.getElementById('char-description').innerHTML = `<p>${descriptions[characterId]}</p>`;
+    const descEl = document.getElementById('char-description');
+    descEl.textContent = '';
+    const p = document.createElement('p');
+    p.textContent = descriptions[characterId] || '';
+    descEl.appendChild(p);
     
     // Highlight la carte sélectionnée
     document.querySelectorAll('.character-card').forEach(card => {
@@ -89,9 +93,16 @@ function selectCharacter(characterId) {
     });
     document.querySelector(`[data-character="${characterId}"]`).style.borderColor = '#ff6b35';
     
+    // Nom du personnage pour confirmation
+    const characterNames = {
+        mark: 'Mark Evans',
+        axel: 'Axel Blaze',
+        jude: 'Jude Sharp'
+    };
+    
     // Demander confirmation
     setTimeout(() => {
-        if (confirm(`Voulez-vous jouer avec ${characterId === 'mark' ? 'Mark Evans' : characterId === 'axel' ? 'Axel Blaze' : 'Jude Sharp'}?`)) {
+        if (confirm(`Voulez-vous jouer avec ${characterNames[characterId] || characterId}?`)) {
             currentCharacterId = characterId;
             const result = game.selectCharacter(characterId);
             
@@ -268,14 +279,21 @@ function updateBattleUI(battleState) {
     
     // Mettre à jour la liste des techniques
     const techList = document.getElementById('techniques-list');
-    techList.innerHTML = '';
+    techList.textContent = '';
     battleState.player.techniques.forEach((tech, index) => {
         const btn = document.createElement('button');
         btn.className = 'technique-btn';
-        btn.innerHTML = `
-            <span class="tech-name">${tech.name}</span>
-            <span class="tech-power">Puissance: ${tech.power} | Élément: ${tech.type}</span>
-        `;
+        
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'tech-name';
+        nameSpan.textContent = tech.name;
+        
+        const powerSpan = document.createElement('span');
+        powerSpan.className = 'tech-power';
+        powerSpan.textContent = `Puissance: ${tech.power} | Élément: ${tech.type}`;
+        
+        btn.appendChild(nameSpan);
+        btn.appendChild(powerSpan);
         btn.onclick = () => useTechnique(index);
         techList.appendChild(btn);
     });

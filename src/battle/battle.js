@@ -318,7 +318,7 @@ class BattleSystem {
         }
 
         // Si assez de TP, utiliser une technique
-        if (tpPercentage >= 0.2 && Math.random() < 0.6) {
+        if (tpPercentage >= 0.2 && this.enemy.techniques.length > 0 && Math.random() < 0.6) {
             const techniqueIndex = Math.floor(Math.random() * this.enemy.techniques.length);
             return { action: BattleActionType.TECHNIQUE, techniqueIndex };
         }

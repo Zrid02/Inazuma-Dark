@@ -35,12 +35,6 @@ class InazumaDarkGame {
      * Initialiser le jeu
      */
     initialize() {
-        console.log("=================================");
-        console.log("   INAZUMA DARK");
-        console.log("   Un jeu inspiré de Fear and Hunger");
-        console.log("   Dans l'univers d'Inazuma Eleven");
-        console.log("=================================\n");
-        
         this.state = GameState.MENU;
         this.loadSaveData();
         
